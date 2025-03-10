@@ -1,0 +1,3 @@
+# README Graphs
+## What is README Graphs?
+README Graphs is a WebAPI used to generate an svg showing off statistics about your github profile, commits, languages, stars etc...
