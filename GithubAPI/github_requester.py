@@ -54,3 +54,23 @@ class GithubRequester:
         if response.status_code == 404:
             return None
         return json.loads(response.text)
+    def get_user_languages(self, username, limit=99):
+        repos = self.get_user_repos(username)
+        if repos is None:
+            return None
+        languages = {}
+        for repo in repos:
+            repo_languages = self.get_repo_languages(username, repo["name"])
+            for language, bytes_of_code in repo_languages.items():
+                if language in languages:
+                    languages[language] += bytes_of_code
+                else:
+                    languages[language] = bytes_of_code
+        languages = dict(sorted(languages.items(), key=lambda item: item[1], reverse=True))
+        other = 0
+        for key in list(languages.keys())[limit:]:
+            other += languages[key]
+            del languages[key]
+        if other > 0:
+            languages["Other"] = other
+        return languages

@@ -17,22 +17,10 @@ if __name__ == "__main__":
     user_details = requester.get_user_details(user_to_request)
     repos = requester.get_user_repos(user_to_request)
 
-    languages = {}
-    for repo in repos:
-        repo_languages = requester.get_repo_languages(user_to_request, repo["name"])
-        for language, bytes_of_code in repo_languages.items():
-            if language in languages:
-                languages[language] += bytes_of_code
-            else:
-                languages[language] = bytes_of_code
+    languages = requester.get_user_languages(user_to_request, limit=5)
 
-    if len(languages) > 5:
-        # sort by amount
-        languages = dict(sorted(languages.items(), key=lambda item: item[1], reverse=True))
-        other = 0
-        for key in list(languages.keys())[5:]:
-            other += languages[key]
-            del languages[key]
-        languages["Other"] = other
-
-    generator.generate_donut_chart(user_to_request,languages)
+    out = generator.generate_donut_chart(f"{user_to_request}'s top languages",languages)
+    # Out variable contains the svg content of the donut chart
+    # save temporarily
+    with open("donut_chart.svg", "w") as f:
+        f.write(out)

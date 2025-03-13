@@ -1,5 +1,7 @@
 import json
 class GithubDataExtractor:
+    def __init__(self):
+        pass
     def extract_user_details(self, user_details):
         return {
             "username": user_details["login"],
@@ -28,3 +30,4 @@ class GithubDataExtractor:
             if date.startswith(year):
                 year_commits.append(commit)
         return year_commits
+    
