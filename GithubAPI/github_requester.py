@@ -60,12 +60,11 @@ class GithubRequester:
             return None
         languages = {}
         for repo in repos:
+            if repo.get("fork"):
+                continue
             repo_languages = self.get_repo_languages(username, repo["name"])
             for language, bytes_of_code in repo_languages.items():
-                if language in languages:
-                    languages[language] += bytes_of_code
-                else:
-                    languages[language] = bytes_of_code
+                languages[language] = languages.get(language, 0) + bytes_of_code
         languages = dict(sorted(languages.items(), key=lambda item: item[1], reverse=True))
         other = 0
         for key in list(languages.keys())[limit:]:
