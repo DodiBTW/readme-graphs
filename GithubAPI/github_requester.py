@@ -55,6 +55,7 @@ class GithubRequester:
             return None
         return json.loads(response.text)
     def get_user_languages(self, username, limit=99):
+        # This script finds every repo's languages and adds them. After sorting, any language after the limit is added to "Other", as well as any language that is less than 5% of the total.
         repos = self.get_user_repos(username)
         if repos is None:
             return None
@@ -70,6 +71,11 @@ class GithubRequester:
         for key in list(languages.keys())[limit:]:
             other += languages[key]
             del languages[key]
+        total = sum(languages.values())
+        for key in list(languages.keys()):
+            if languages[key] / total < 0.05:
+                other += languages[key]
+                del languages[key]
         if other > 0:
             languages["Other"] = other
         return languages
