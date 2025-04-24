@@ -30,4 +30,13 @@ class GithubDataExtractor:
             if date.startswith(year):
                 year_commits.append(commit)
         return year_commits
-    
+    def extract_star_history(self, repo_stars, creation_date):
+        star_history = []
+        stars = 0
+        # Fetch repo creation date and set to 0 stars
+        star_history.append({"date": creation_date.split("T")[0], "stars": 0})
+        for entry in repo_stars:
+            stars += 1
+            date = entry["starred_at"].split("T")[0]
+            star_history.append({"date": date, "stars": stars})
+        return star_history
